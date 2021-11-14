@@ -1,8 +1,8 @@
 package com.thoughtworks.auction.controller
 
-import com.thoughtworks.auction.service.PayResult
-import com.thoughtworks.auction.service.PayStatus
-import com.thoughtworks.auction.service.PaymentService
+import com.thoughtworks.auction.service.payment.PayStatus
+import com.thoughtworks.auction.service.payment.PayResult
+import com.thoughtworks.auction.service.payment.PaymentService
 import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest

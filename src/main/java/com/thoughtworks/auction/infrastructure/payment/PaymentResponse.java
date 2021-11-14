@@ -1,4 +1,4 @@
-package com.thoughtworks.auction.infrastructure;
+package com.thoughtworks.auction.infrastructure.payment;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

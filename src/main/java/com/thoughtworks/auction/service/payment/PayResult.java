@@ -1,4 +1,4 @@
-package com.thoughtworks.auction.service;
+package com.thoughtworks.auction.service.payment;
 
 import com.thoughtworks.auction.controller.ErrorCode;
 import lombok.AllArgsConstructor;

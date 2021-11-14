@@ -1,4 +1,4 @@
-package com.thoughtworks.auction.infrastructure;
+package com.thoughtworks.auction.infrastructure.payment;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;

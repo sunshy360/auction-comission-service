@@ -1,5 +1,7 @@
 package com.thoughtworks.auction.infrastructure
 
+import com.thoughtworks.auction.infrastructure.commission.AuctionCommissionOrder
+import com.thoughtworks.auction.infrastructure.commission.AuctionCommissionOrderRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager

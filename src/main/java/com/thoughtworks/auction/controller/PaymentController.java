@@ -1,8 +1,8 @@
 package com.thoughtworks.auction.controller;
 
-import com.thoughtworks.auction.service.PayResult;
-import com.thoughtworks.auction.service.PayStatus;
-import com.thoughtworks.auction.service.PaymentService;
+import com.thoughtworks.auction.service.payment.PayResult;
+import com.thoughtworks.auction.service.payment.PayStatus;
+import com.thoughtworks.auction.service.payment.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

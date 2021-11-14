@@ -1,17 +1,15 @@
-package com.thoughtworks.auction.service;
+package com.thoughtworks.auction.service.payment;
 
 import com.thoughtworks.auction.controller.ErrorCode;
-import com.thoughtworks.auction.infrastructure.AuctionCommissionOrder;
-import com.thoughtworks.auction.infrastructure.AuctionCommissionOrderRepository;
-import com.thoughtworks.auction.infrastructure.PaymentFeignClient;
-import com.thoughtworks.auction.infrastructure.PaymentResponse;
-import com.thoughtworks.auction.infrastructure.TransferRequest;
+import com.thoughtworks.auction.infrastructure.commission.AuctionCommissionOrder;
+import com.thoughtworks.auction.infrastructure.commission.AuctionCommissionOrderRepository;
+import com.thoughtworks.auction.infrastructure.payment.PaymentFeignClient;
+import com.thoughtworks.auction.infrastructure.payment.PaymentResponse;
+import com.thoughtworks.auction.infrastructure.payment.TransferRequest;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
 
 @Slf4j
 @Service

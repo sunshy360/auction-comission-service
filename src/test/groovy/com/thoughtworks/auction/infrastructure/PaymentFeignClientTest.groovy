@@ -1,6 +1,8 @@
 package com.thoughtworks.auction.infrastructure
 
 import com.github.tomakehurst.wiremock.WireMockServer
+import com.thoughtworks.auction.infrastructure.payment.PaymentFeignClient
+import com.thoughtworks.auction.infrastructure.payment.TransferRequest
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.properties.EnableConfigurationProperties
