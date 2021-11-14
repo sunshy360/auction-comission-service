@@ -43,6 +43,9 @@ public class PaymentService {
         } catch (FeignException.ServiceUnavailable e) {
             log.error("feign service unavailable", e);
             return PaymentResponse.builder().success(false).failedReason(PAYMENT_SERVICE_UNAVAILABLE_REASON).build();
+        } catch (Exception e) {
+            log.error("feign client throw exception with", e);
+            return PaymentResponse.builder().success(false).failedReason(e.getMessage()).build();
         }
     }
 

@@ -13,7 +13,9 @@ public enum ErrorCode {
 
     PAYMENT_SERVICE_UNAVAILABLE(1002, "payment service unavailable, please retry later", "service unavailable", HttpStatus.SERVICE_UNAVAILABLE),
 
-    AUCTION_ITEM_NOT_EXISTS(2001, "auction item is not exists", null, HttpStatus.NOT_FOUND);
+    AUCTION_ITEM_NOT_EXISTS(2001, "auction item is not exists", null, HttpStatus.NOT_FOUND),
+
+    INTERNAL_SERVER_ERROR(9999, "unexpected error", null, HttpStatus.INTERNAL_SERVER_ERROR);
 
     private final int code;
 
@@ -24,6 +26,6 @@ public enum ErrorCode {
     private final HttpStatus httpStatus;
 
     public static ErrorCode from(String failedReason) {
-        return Arrays.stream(ErrorCode.values()).filter(e -> e.getFeignMessage().equals(failedReason)).findFirst().orElseThrow();
+        return Arrays.stream(ErrorCode.values()).filter(e -> e.getFeignMessage().equals(failedReason)).findFirst().orElse(ErrorCode.INTERNAL_SERVER_ERROR);
     }
 }
