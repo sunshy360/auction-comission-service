@@ -25,7 +25,7 @@ public class AuctionItemAppraisalService {
         Long auctionItemId = order.getAuctionItemId();
         Optional<AuctionItem> auctionItemOptional = auctionItemRepository.findById(auctionItemId);
         AuctionItem auctionItem = auctionItemOptional.orElseThrow();
-        AppraisalApplicationResponse appraisalApplicationResponse = appraisalMessagePublisher.publishAppraisalApplication(orderId, auctionItemId, auctionItem.getName(), auctionItem.getType());
+        AppraisalApplicationResponse appraisalApplicationResponse = appraisalMessagePublisher.publishAppraisalApplication(orderId, auctionItemId, auctionItem.getName(), auctionItem.getType(), auctionItem.getComment());
         order.setAppraisalApplicationSubmitted(appraisalApplicationResponse.isSuccess());
         auctionCommissionOrderRepository.save(order);
         return appraisalApplicationResponse.isSuccess() ? AppraisalApplicationResult.builder().status(AppraisalApplicationStatus.SUBMITTED).build() :

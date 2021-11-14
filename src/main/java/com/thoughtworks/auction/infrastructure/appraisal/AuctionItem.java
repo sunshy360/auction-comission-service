@@ -23,4 +23,6 @@ public class AuctionItem {
     private String name;
 
     private String type;
+
+    private String comment;
 }

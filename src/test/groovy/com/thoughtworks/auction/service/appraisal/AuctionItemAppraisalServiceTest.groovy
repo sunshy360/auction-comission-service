@@ -30,7 +30,7 @@ class AuctionItemAppraisalServiceTest extends Specification {
             orderRepository.getOne(1L) >> oldOrder
             def auctionItem = new AuctionItem(id: 10L, name: "the smile of monalisa", type: "painting")
             auctionItemRepository.findById(10L) >> Optional.ofNullable(auctionItem)
-            appraisalMessagePublisher.publishAppraisalApplication(1L, 10L, "the smile of monalisa", "painting") >> new AppraisalApplicationResponse(true, null)
+            appraisalMessagePublisher.publishAppraisalApplication(1L, 10L, "the smile of monalisa", "painting", null) >> new AppraisalApplicationResponse(true, null)
             orderRepository.save(newOrder) >> newOrder
         when:
             def result = appraisalService.submitAppraisalApplication(1L)
