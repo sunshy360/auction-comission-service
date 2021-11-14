@@ -38,6 +38,8 @@ dependencies {
     implementation 'com.h2database:h2'
     implementation 'org.flywaydb:flyway-core'
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-ribbon'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation group: 'io.github.openfeign', name: 'feign-jackson', version: '11.6'
 
     implementation(
@@ -58,4 +60,5 @@ dependencies {
     testImplementation('org.codehaus.groovy:groovy:3.0.8')
     testImplementation('org.spockframework:spock-core:2.0-groovy-3.0')
     testImplementation('org.spockframework:spock-spring:2.0-groovy-3.0')
+    testImplementation('com.github.tomakehurst:wiremock:2.27.2')
 }
