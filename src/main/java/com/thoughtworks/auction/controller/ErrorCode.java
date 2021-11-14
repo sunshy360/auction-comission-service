@@ -26,6 +26,6 @@ public enum ErrorCode {
     private final HttpStatus httpStatus;
 
     public static ErrorCode from(String failedReason) {
-        return Arrays.stream(ErrorCode.values()).filter(e -> e.getFeignMessage().equals(failedReason)).findFirst().orElse(ErrorCode.INTERNAL_SERVER_ERROR);
+        return Arrays.stream(ErrorCode.values()).filter(e -> failedReason.equals(e.getFeignMessage())).findFirst().orElse(ErrorCode.INTERNAL_SERVER_ERROR);
     }
 }
