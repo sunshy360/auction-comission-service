@@ -22,7 +22,7 @@ public class AuctionItemAppraisalService {
         AuctionCommissionOrder order = auctionCommissionOrderRepository.getOne(orderId);
         AuctionItem auctionItem = auctionItemRepository.findById(order.getAuctionItemId()).orElseThrow();
         AppraisalApplicationResponse appraisalApplicationResponse = appraisalMessagePublisher.publishAppraisalApplication(orderId, order.getAuctionItemId(),
-                auctionItem.getName(), auctionItem.getType(), auctionItem.getComment());
+                auctionItem.getName(), auctionItem.getType(), auctionItem.getDescription());
         updateAuctionCommissionOrder(order, appraisalApplicationResponse);
         return appraisalApplicationResponse.isSuccess() ? AppraisalApplicationResult.builder().status(AppraisalApplicationStatus.SUBMITTED).build() :
                 AppraisalApplicationResult.builder().status(AppraisalApplicationStatus.UNSUBMITTED).reason(appraisalApplicationResponse.getFailedReason()).build();

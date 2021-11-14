@@ -21,9 +21,9 @@ public class AppraisalMessagePublisher {
 
     private final AmqpTemplate rabbitTemplate;
 
-    public AppraisalApplicationResponse publishAppraisalApplication(Long orderId, Long auctionItemId, String name, String type, String comment) {
+    public AppraisalApplicationResponse publishAppraisalApplication(Long orderId, Long auctionItemId, String name, String type, String description) {
         try {
-            MessageModel messageModel = MessageModel.builder().commissionOrderId(orderId).auctionItemId(auctionItemId).auctionName(name).auctionType(type).comment(comment).build();
+            MessageModel messageModel = MessageModel.builder().commissionOrderId(orderId).auctionItemId(auctionItemId).auctionName(name).auctionType(type).description(description).build();
             validateMessageModel(messageModel);
             rabbitTemplate.convertAndSend(APPRAISAL_EXCHANGE_NAME, DEFAULT_ROUTING_KEY_PREFIX, messageModel);
             return AppraisalApplicationResponse.builder().success(true).build();

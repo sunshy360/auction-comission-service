@@ -14,7 +14,7 @@ class AppraisalMessagePublisherTest extends Specification {
 
     def "Should publish message with full appraisal message"() {
         when:
-            appraisalMessagePublisher.publishAppraisalApplication(1L, 10L, "the smile of monalisa", "painting", "please response as soon as possible")
+            appraisalMessagePublisher.publishAppraisalApplication(1L, 10L, "the smile of monalisa", "painting", "treasure")
         then:
             1 * amqpTemplate.convertAndSend("appraisal.fanout", "simple.topic", {
                 verifyAll(it, MessageModel) {

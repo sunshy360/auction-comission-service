@@ -24,5 +24,5 @@ public class AuctionItem {
 
     private String type;
 
-    private String comment;
+    private String description;
 }

@@ -25,5 +25,5 @@ public class MessageModel {
     @NotBlank
     private String auctionType;
 
-    private String comment;
+    private String description;
 }
