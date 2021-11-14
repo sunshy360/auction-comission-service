@@ -3,13 +3,11 @@ package com.thoughtworks.auction.service.appraisal;
 import com.thoughtworks.auction.infrastructure.appraisal.AppraisalApplicationResponse;
 import com.thoughtworks.auction.infrastructure.appraisal.AppraisalMessagePublisher;
 import com.thoughtworks.auction.infrastructure.appraisal.AuctionItem;
+import com.thoughtworks.auction.infrastructure.appraisal.AuctionItemRepository;
 import com.thoughtworks.auction.infrastructure.commission.AuctionCommissionOrder;
 import com.thoughtworks.auction.infrastructure.commission.AuctionCommissionOrderRepository;
-import com.thoughtworks.auction.infrastructure.appraisal.AuctionItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,13 +20,16 @@ public class AuctionItemAppraisalService {
 
     public AppraisalApplicationResult submitAppraisalApplication(Long orderId) {
         AuctionCommissionOrder order = auctionCommissionOrderRepository.getOne(orderId);
-        Long auctionItemId = order.getAuctionItemId();
-        Optional<AuctionItem> auctionItemOptional = auctionItemRepository.findById(auctionItemId);
-        AuctionItem auctionItem = auctionItemOptional.orElseThrow();
-        AppraisalApplicationResponse appraisalApplicationResponse = appraisalMessagePublisher.publishAppraisalApplication(orderId, auctionItemId, auctionItem.getName(), auctionItem.getType(), auctionItem.getComment());
-        order.setAppraisalApplicationSubmitted(appraisalApplicationResponse.isSuccess());
-        auctionCommissionOrderRepository.save(order);
+        AuctionItem auctionItem = auctionItemRepository.findById(order.getAuctionItemId()).orElseThrow();
+        AppraisalApplicationResponse appraisalApplicationResponse = appraisalMessagePublisher.publishAppraisalApplication(orderId, order.getAuctionItemId(),
+                auctionItem.getName(), auctionItem.getType(), auctionItem.getComment());
+        updateAuctionCommissionOrder(order, appraisalApplicationResponse);
         return appraisalApplicationResponse.isSuccess() ? AppraisalApplicationResult.builder().status(AppraisalApplicationStatus.SUBMITTED).build() :
                 AppraisalApplicationResult.builder().status(AppraisalApplicationStatus.UNSUBMITTED).reason(appraisalApplicationResponse.getFailedReason()).build();
+    }
+
+    private void updateAuctionCommissionOrder(AuctionCommissionOrder order, AppraisalApplicationResponse appraisalApplicationResponse) {
+        order.setAppraisalApplicationSubmitted(appraisalApplicationResponse.isSuccess());
+        auctionCommissionOrderRepository.save(order);
     }
 }
