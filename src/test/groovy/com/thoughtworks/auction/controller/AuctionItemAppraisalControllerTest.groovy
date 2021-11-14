@@ -32,4 +32,15 @@ class AuctionItemAppraisalControllerTest extends Specification {
                     .andExpect(status().isAccepted())
                     .andExpect(jsonPath('$.data', is("SUBMITTED")))
     }
+
+    def "Should return failed when submit auction item is not exists"() {
+        given:
+            appraisalService.submitAppraisalApplication(2) >> new AppraisalApplicationResult(AppraisalApplicationStatus.UNSUBMITTED, ErrorCode.AUCTION_ITEM_NOT_EXISTS)
+        expect:
+            mockMvc.perform(post("/orders/2/auction-item-appraisal")
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isNotFound())
+                    .andExpect(jsonPath('$.error.code', is(2001)))
+                    .andExpect(jsonPath('$.error.message', is("auction item is not exists")))
+    }
 }

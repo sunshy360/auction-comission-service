@@ -11,7 +11,9 @@ import java.util.Arrays;
 public enum ErrorCode {
     INSUFFICIENT_BALANCE(1001, "transaction failed, because of insufficient balance", "insufficient balance", HttpStatus.CONFLICT),
 
-    PAYMENT_SERVICE_UNAVAILABLE(1002, "payment service unavailable, please retry later", "service unavailable", HttpStatus.SERVICE_UNAVAILABLE);
+    PAYMENT_SERVICE_UNAVAILABLE(1002, "payment service unavailable, please retry later", "service unavailable", HttpStatus.SERVICE_UNAVAILABLE),
+
+    AUCTION_ITEM_NOT_EXISTS(2001, "auction item is not exists", null, HttpStatus.NOT_FOUND);
 
     private final int code;
 

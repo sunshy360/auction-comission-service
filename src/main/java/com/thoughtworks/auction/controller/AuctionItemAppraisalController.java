@@ -23,8 +23,10 @@ public class AuctionItemAppraisalController {
         AppraisalApplicationResult appraisalApplicationResult = auctionItemAppraisalService.submitAppraisalApplication(orderId);
         if (appraisalApplicationResult.getStatus().equals(AppraisalApplicationStatus.SUBMITTED)) {
             return new ResponseEntity<>(new CommonResponse<>(appraisalApplicationResult.getStatus()), HttpStatus.ACCEPTED);
+        } else {
+            ErrorCode errorCode = appraisalApplicationResult.getErrorCode();
+            return new ResponseEntity<>(new CommonResponse<>(errorCode, appraisalApplicationResult.getStatus()), errorCode.getHttpStatus());
         }
-        return null;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.thoughtworks.auction.service.appraisal
 
+import com.thoughtworks.auction.controller.ErrorCode
 import com.thoughtworks.auction.infrastructure.appraisal.AppraisalApplicationResponse
 import com.thoughtworks.auction.infrastructure.appraisal.AppraisalMessagePublisher
 import com.thoughtworks.auction.infrastructure.appraisal.AuctionItem
@@ -36,7 +37,20 @@ class AuctionItemAppraisalServiceTest extends Specification {
             def result = appraisalService.submitAppraisalApplication(1L)
         then:
             result.getStatus() == AppraisalApplicationStatus.SUBMITTED
-            result.getReason() == null
+            result.getErrorCode() == null
+    }
+
+    def "Should return unsubmitted status when auction item is not found"() {
+        given:
+            def oldOrder = new AuctionCommissionOrder(id: 1, bankAccount: "0002", auctionItemId: 10L, transactionAmount: new BigDecimal(200000.00),
+                    isTransactionPaid: false, isAppraisalApplicationSubmitted: false)
+            orderRepository.getOne(1L) >> oldOrder
+            auctionItemRepository.findById(10L) >> Optional.empty()
+        when:
+            def result = appraisalService.submitAppraisalApplication(1L)
+        then:
+            result.getStatus() == AppraisalApplicationStatus.UNSUBMITTED
+            result.getErrorCode() == ErrorCode.AUCTION_ITEM_NOT_EXISTS
     }
 
 }
