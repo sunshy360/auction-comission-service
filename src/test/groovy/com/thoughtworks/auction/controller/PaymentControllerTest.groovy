@@ -27,7 +27,7 @@ class PaymentControllerTest extends Specification {
         given:
             paymentService.payForTransaction(1L) >> new PayResult(PayStatus.SUCCESS, null)
         expect:
-            mockMvc.perform(post("/orders/1/transaction-payment")
+            mockMvc.perform(post("/orders/1/transaction-payment/confirmation")
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath('$.data', is("SUCCESS")))
@@ -37,9 +37,9 @@ class PaymentControllerTest extends Specification {
         given:
             paymentService.payForTransaction(2L) >> new PayResult(PayStatus.FAILED, ErrorCode.INSUFFICIENT_BALANCE)
         expect:
-            mockMvc.perform(post("/orders/2/transaction-payment")
+            mockMvc.perform(post("/orders/2/transaction-payment/confirmation")
                     .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk())
+                    .andExpect(status().isConflict())
                     .andExpect(jsonPath('$.error.code', is(1001)))
                     .andExpect(jsonPath('$.error.message', is("transaction failed, because of insufficient balance")))
     }
@@ -48,9 +48,9 @@ class PaymentControllerTest extends Specification {
         given:
             paymentService.payForTransaction(3L) >> new PayResult(PayStatus.FAILED, ErrorCode.PAYMENT_SERVICE_UNAVAILABLE)
         expect:
-            mockMvc.perform(post("/orders/3/transaction-payment")
+            mockMvc.perform(post("/orders/3/transaction-payment/confirmation")
                     .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk())
+                    .andExpect(status().isServiceUnavailable())
                     .andExpect(jsonPath('$.error.code', is(1002)))
                     .andExpect(jsonPath('$.error.message', is("payment service unavailable, please retry later")))
     }

@@ -19,7 +19,9 @@ import java.util.Arrays;
 public class PaymentService {
     public static final String AUCTION_COMPANY_ACCOUNT = "0001";
 
-    public static final String PAYMENT_SERVICE_UNAVAILABLE_REASON = "payment service unavailable, please retry later";
+    public static final String INSUFFICIENT_BALANCE_REASON = "insufficient balance";
+
+    public static final String PAYMENT_SERVICE_UNAVAILABLE_REASON = "service unavailable";
 
     private final PaymentFeignClient paymentFeignClient;
 
@@ -37,14 +39,17 @@ public class PaymentService {
     private PaymentResponse doPay(AuctionCommissionOrder order) {
         try {
             return paymentFeignClient.transfer(buildTransferRequest(order));
+        } catch (FeignException.Conflict e) {
+            log.error("feign conflict exception", e);
+            return PaymentResponse.builder().success(false).failedReason(INSUFFICIENT_BALANCE_REASON).build();
         } catch (FeignException.ServiceUnavailable e) {
-            log.error("service unavailable", e);
+            log.error("feign service unavailable", e);
             return PaymentResponse.builder().success(false).failedReason(PAYMENT_SERVICE_UNAVAILABLE_REASON).build();
         }
     }
 
     private ErrorCode buildErrorCode(String failedReason) {
-        return Arrays.stream(ErrorCode.values()).filter(e -> e.getMsg().equals(failedReason)).findFirst().orElseThrow();
+        return Arrays.stream(ErrorCode.values()).filter(e -> e.getFeignMessage().equals(failedReason)).findFirst().orElseThrow();
     }
 
     private TransferRequest buildTransferRequest(AuctionCommissionOrder order) {

@@ -41,7 +41,8 @@ class PaymentServiceTest extends Specification {
             def oldOrder = new AuctionCommissionOrder(id: 2, bankAccount: "0003", transactionAmount: new BigDecimal(800000.00))
             def newOrder = new AuctionCommissionOrder(id: 2, bankAccount: "0003", transactionAmount: new BigDecimal(800000.00), isTransactionPaid: false)
             paymentRepository.getOne(2L) >> oldOrder
-            paymentFeignClient.transfer(new TransferRequest("0001", "0003", new BigDecimal(800000.00))) >> new PaymentResponse(false, "transaction failed, because of insufficient balance")
+            Request feignRequest = Request.create(Request.HttpMethod.POST, '/api', Map.of(), null, new RequestTemplate())
+            paymentFeignClient.transfer(new TransferRequest("0001", "0003", new BigDecimal(800000.00))) >> { throw new FeignException.Conflict("insufficient balance", feignRequest, null) }
             paymentRepository.save(newOrder) >> newOrder
         when:
             def result = paymentService.payForTransaction(2L)
