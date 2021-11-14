@@ -1,5 +1,7 @@
 package com.thoughtworks.auction.controller;
 
+import com.thoughtworks.auction.service.PayResult;
+import com.thoughtworks.auction.service.PayStatus;
 import com.thoughtworks.auction.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,8 +20,10 @@ public class PaymentController {
 
     @PostMapping(value = "/{oid}/transaction-payment")
     @ResponseStatus(HttpStatus.OK)
-    CommonResponse<PayStatus> payForTransaction(@PathVariable("oid") Long orderId) {
-        return new CommonResponse<>(paymentService.payForTransaction(orderId));
+    CommonResponse payForTransaction(@PathVariable("oid") Long orderId) {
+        PayResult payResult = paymentService.payForTransaction(orderId);
+        return payResult.getPayStatus().equals(PayStatus.SUCCESS) ? new CommonResponse<>(payResult.getPayStatus()) :
+                new CommonResponse<>(payResult.getErrorCode(), payResult.getPayStatus());
     }
 
 }

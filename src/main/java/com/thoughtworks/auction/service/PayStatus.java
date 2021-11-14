@@ -1,4 +1,4 @@
-package com.thoughtworks.auction.controller;
+package com.thoughtworks.auction.service;
 
 public enum PayStatus {
     SUCCESS,

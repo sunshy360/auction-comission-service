@@ -1,5 +1,7 @@
 package com.thoughtworks.auction.controller
 
+import com.thoughtworks.auction.service.PayResult
+import com.thoughtworks.auction.service.PayStatus
 import com.thoughtworks.auction.service.PaymentService
 import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,11 +25,22 @@ class PaymentControllerTest extends Specification {
 
     def "Should return pay success when auction company account balance is greater than transaction amount"() {
         given:
-            paymentService.payForTransaction(1L) >> PayStatus.SUCCESS
+            paymentService.payForTransaction(1L) >> new PayResult(PayStatus.SUCCESS, null)
         expect:
             mockMvc.perform(post("/orders/1/transaction-payment")
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath('$.data', is("SUCCESS")))
+    }
+
+    def "Should return pay failed when auction company account balance is insufficient"() {
+        given:
+            paymentService.payForTransaction(2L) >> new PayResult(PayStatus.FAILED, ErrorCode.INSUFFICIENT_BALANCE)
+        expect:
+            mockMvc.perform(post("/orders/2/transaction-payment")
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath('$.error.code', is(1001)))
+                    .andExpect(jsonPath('$.error.message', is("transaction failed, because of insufficient balance")))
     }
 }

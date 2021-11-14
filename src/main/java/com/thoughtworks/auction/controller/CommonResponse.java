@@ -22,7 +22,7 @@ public class CommonResponse<T> {
         data = value;
     }
 
-    public CommonResponse(ResponseCode errorCode, T value) {
+    public CommonResponse(ErrorCode errorCode, T value) {
         error = ErrorResponse.builder()
                 .code(errorCode.getCode())
                 .message(errorCode.getMsg())

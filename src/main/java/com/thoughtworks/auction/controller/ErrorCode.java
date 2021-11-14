@@ -5,8 +5,8 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum ResponseCode {
-    PAY_SUCCESS(1000, "支付成功");
+public enum ErrorCode {
+    INSUFFICIENT_BALANCE(1001, "transaction failed, because of insufficient balance");
 
     private final int code;
 
