@@ -1,0 +1,11 @@
+server:
+  servlet:
+    context-path: /commission
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/auction
+    username: root
+    password: abcd1234
+payment:
+  service:
+    url: http://localhost:8081
