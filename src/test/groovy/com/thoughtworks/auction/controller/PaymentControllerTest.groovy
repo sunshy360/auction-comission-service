@@ -43,4 +43,15 @@ class PaymentControllerTest extends Specification {
                     .andExpect(jsonPath('$.error.code', is(1001)))
                     .andExpect(jsonPath('$.error.message', is("transaction failed, because of insufficient balance")))
     }
+
+    def "Should return pay failed when payment service is down"() {
+        given:
+            paymentService.payForTransaction(3L) >> new PayResult(PayStatus.FAILED, ErrorCode.PAYMENT_SERVICE_UNAVAILABLE)
+        expect:
+            mockMvc.perform(post("/orders/3/transaction-payment")
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath('$.error.code', is(1002)))
+                    .andExpect(jsonPath('$.error.message', is("payment service unavailable, please retry later")))
+    }
 }

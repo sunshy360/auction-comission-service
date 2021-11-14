@@ -6,6 +6,9 @@ import com.thoughtworks.auction.infrastructure.AuctionCommissionOrderRepository
 import com.thoughtworks.auction.infrastructure.PaymentFeignClient
 import com.thoughtworks.auction.infrastructure.PaymentResponse
 import com.thoughtworks.auction.infrastructure.TransferRequest
+import feign.FeignException
+import feign.Request
+import feign.RequestTemplate
 import spock.lang.Specification
 
 class PaymentServiceTest extends Specification {
@@ -45,5 +48,20 @@ class PaymentServiceTest extends Specification {
         then:
             result.getPayStatus() == PayStatus.FAILED
             result.getErrorCode() == ErrorCode.INSUFFICIENT_BALANCE
+    }
+
+    def "Should return pay failed status when feign client timeout"() {
+        given:
+            def oldOrder = new AuctionCommissionOrder(id: 3, bankAccount: "0004", transactionAmount: new BigDecimal(200000.00))
+            def newOrder = new AuctionCommissionOrder(id: 3, bankAccount: "0004", transactionAmount: new BigDecimal(200000.00), isTransactionPaid: false)
+            paymentRepository.getOne(3L) >> oldOrder
+            Request feignRequest = Request.create(Request.HttpMethod.POST, '/api', Map.of(), null, new RequestTemplate())
+            paymentFeignClient.transfer(new TransferRequest("0001", "0004", new BigDecimal(200000.00))) >> { throw new FeignException.ServiceUnavailable("service unavailable", feignRequest, null) }
+            paymentRepository.save(newOrder) >> newOrder
+        when:
+            def result = paymentService.payForTransaction(3L)
+        then:
+            result.getPayStatus() == PayStatus.FAILED
+            result.getErrorCode() == ErrorCode.PAYMENT_SERVICE_UNAVAILABLE
     }
 }
