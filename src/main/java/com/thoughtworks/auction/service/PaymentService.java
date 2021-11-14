@@ -33,7 +33,7 @@ public class PaymentService {
         order.setTransactionPaid(paymentResponse.isSuccess());
         AuctionCommissionOrder savedOrder = paymentRepository.save(order);
         return savedOrder.isTransactionPaid() ? PayResult.builder().payStatus(PayStatus.SUCCESS).build() :
-                PayResult.builder().payStatus(PayStatus.FAILED).errorCode(buildErrorCode(paymentResponse.getFailedReason())).build();
+                PayResult.builder().payStatus(PayStatus.FAILED).errorCode(ErrorCode.from(paymentResponse.getFailedReason())).build();
     }
 
     private PaymentResponse doPay(AuctionCommissionOrder order) {
@@ -46,10 +46,6 @@ public class PaymentService {
             log.error("feign service unavailable", e);
             return PaymentResponse.builder().success(false).failedReason(PAYMENT_SERVICE_UNAVAILABLE_REASON).build();
         }
-    }
-
-    private ErrorCode buildErrorCode(String failedReason) {
-        return Arrays.stream(ErrorCode.values()).filter(e -> e.getFeignMessage().equals(failedReason)).findFirst().orElseThrow();
     }
 
     private TransferRequest buildTransferRequest(AuctionCommissionOrder order) {

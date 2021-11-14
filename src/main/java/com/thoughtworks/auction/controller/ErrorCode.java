@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+import java.util.Arrays;
+
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
@@ -18,4 +20,8 @@ public enum ErrorCode {
     private final String feignMessage;
 
     private final HttpStatus httpStatus;
+
+    public static ErrorCode from(String failedReason) {
+        return Arrays.stream(ErrorCode.values()).filter(e -> e.getFeignMessage().equals(failedReason)).findFirst().orElseThrow();
+    }
 }
